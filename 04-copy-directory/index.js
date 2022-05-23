@@ -8,14 +8,21 @@ const copyDir = (srcPath, destPath) => {
 
       fs.readdir(srcPath, { withFileTypes: true }, (err, files) => {
         if (err) throw err;
-        files.forEach((file) => {
-          fs.copyFile(
-            path.join(srcPath, file.name),
-            path.join(destPath, file.name),
-            () => {
-              console.log(`File ${file.name} is copied`);
-            }
-          );
+        files.forEach((item) => {
+          if (item.isFile()) {
+            fs.copyFile(
+              path.join(srcPath, item.name),
+              path.join(destPath, item.name),
+              () => {
+                console.log(`File ${item.name} is copied`);
+              }
+            );
+          } else if (item.isDirectory()) {
+            copyDir(
+              path.join(srcPath, item.name),
+              path.join(destPath, item.name)
+            );
+          }
         });
       });
     });
@@ -26,3 +33,5 @@ const srcPath = path.join(__dirname, 'files/');
 const destPath = path.join(__dirname, 'files-copy/');
 
 copyDir(srcPath, destPath);
+
+module.exports = copyDir;
