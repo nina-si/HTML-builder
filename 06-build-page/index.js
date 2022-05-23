@@ -32,28 +32,25 @@ const mergeStyles = (srcPath, bundlePath) => {
 };
 
 const copyDir = (srcPath, destPath) => {
-  fs.rm(destPath, { recursive: true, force: true }, () => {
-    fs.mkdir(destPath, { recursive: true }, (err) => {
+  fs.mkdir(destPath, { recursive: true }, (err) => {
+    if (err) throw err;
+    fs.readdir(srcPath, { withFileTypes: true }, (err, files) => {
       if (err) throw err;
-
-      fs.readdir(srcPath, { withFileTypes: true }, (err, files) => {
-        if (err) throw err;
-        files.forEach((item) => {
-          if (item.isFile()) {
-            fs.copyFile(
-              path.join(srcPath, item.name),
-              path.join(destPath, item.name),
-              () => {
-                console.log(`File ${item.name} is copied`);
-              }
-            );
-          } else if (item.isDirectory()) {
-            copyDir(
-              path.join(srcPath, item.name),
-              path.join(destPath, item.name)
-            );
-          }
-        });
+      files.forEach((item) => {
+        if (item.isFile()) {
+          fs.copyFile(
+            path.join(srcPath, item.name),
+            path.join(destPath, item.name),
+            () => {
+              console.log(`File ${item.name} is copied`);
+            }
+          );
+        } else if (item.isDirectory()) {
+          copyDir(
+            path.join(srcPath, item.name),
+            path.join(destPath, item.name)
+          );
+        }
       });
     });
   });
@@ -83,7 +80,6 @@ readStream.on('data', (data) => {
           fs.rm(destPath, { recursive: true, force: true }, () => {
             for (let i = 0; i < tags.length; i++) {
               html = html.replace(tags[i], components[tags[i]]);
-              console.log(html, 'HTML');
             }
             fs.mkdir(destPath, { recursive: true }, (err) => {
               if (err) throw err;
