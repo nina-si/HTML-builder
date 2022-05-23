@@ -33,5 +33,3 @@ const srcPath = path.join(__dirname, 'files/');
 const destPath = path.join(__dirname, 'files-copy/');
 
 copyDir(srcPath, destPath);
-
-module.exports = copyDir;
