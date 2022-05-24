@@ -22,7 +22,6 @@ const mergeStyles = (srcPath, bundlePath) => {
             if (err) throw err;
             fs.appendFile(bundlePath, `${data}\n`, (err) => {
               if (err) throw err;
-              console.log(`Copied styles from ${file.name}`);
             });
           });
         }
@@ -41,9 +40,7 @@ const copyDir = (srcPath, destPath) => {
           fs.copyFile(
             path.join(srcPath, item.name),
             path.join(destPath, item.name),
-            () => {
-              console.log(`File ${item.name} is copied`);
-            }
+            () => {}
           );
         } else if (item.isDirectory()) {
           copyDir(
